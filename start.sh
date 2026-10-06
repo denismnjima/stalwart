@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Create the config directory if it doesn't exist
+mkdir -p /etc/stalwart
+
+# Generate the config.json file dynamically using Railway's environment variables
+# We use JSON here to easily support the "EnvironmentVariable" tag for the secret.
+cat <<EOF > /etc/stalwart/config.json
+{
+  "store": {
+    "db": {
+      "type": "postgresql",
+      "host": "${PGHOST}",
+      "port": ${PGPORT:-5432},
+      "database": "${PGDATABASE}",
+      "authUsername": "${PGUSER}",
+      "authSecret": {
+        "@type": "EnvironmentVariable",
+        "variableName": "PGPASSWORD"
+      }
+    }
+  }
+}
+EOF
+
+# Start the Stalwart mail server using the generated config
+exec /usr/local/bin/stalwart --config /etc/stalwart/config.json
