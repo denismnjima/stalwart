@@ -9,7 +9,7 @@ cat <<EOF > /etc/stalwart/config.json
 {
   "store": {
     "db": {
-      "type": "postgresql",
+      "@type": "PostgreSql",
       "host": "${PGHOST}",
       "port": ${PGPORT:-5432},
       "database": "${PGDATABASE}",
